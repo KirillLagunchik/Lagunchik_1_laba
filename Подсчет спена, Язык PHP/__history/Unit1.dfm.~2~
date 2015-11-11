@@ -1,0 +1,80 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  Caption = #1052#1077#1090#1088#1086#1083#1086#1075#1080#1103
+  ClientHeight = 500
+  ClientWidth = 635
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 240
+    Top = 8
+    Width = 166
+    Height = 25
+    Caption = #1055#1054#1044#1057#1063#1045#1058' '#1057#1055#1045#1053#1040
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Button1: TButton
+    Left = 8
+    Top = 57
+    Width = 89
+    Height = 32
+    Caption = #1054#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083' '#1089' '#1082#1086#1076#1086#1084
+    TabOrder = 0
+    WordWrap = True
+    OnClick = Button1Click
+  end
+  object Memo1: TMemo
+    Left = 8
+    Top = 95
+    Width = 619
+    Height = 203
+    ScrollBars = ssBoth
+    TabOrder = 1
+    OnKeyPress = Memo1KeyPress
+  end
+  object StringGrid1: TStringGrid
+    Left = 8
+    Top = 368
+    Width = 619
+    Height = 73
+    ColCount = 1
+    FixedCols = 0
+    RowCount = 2
+    FixedRows = 0
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ScrollBars = ssHorizontal
+    TabOrder = 2
+  end
+  object Button2: TButton
+    Left = 256
+    Top = 312
+    Width = 121
+    Height = 41
+    Caption = #1055#1054#1044#1057#1063#1048#1058#1040#1058#1068
+    TabOrder = 3
+    OnClick = Button2Click
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 8
+    Top = 8
+  end
+end

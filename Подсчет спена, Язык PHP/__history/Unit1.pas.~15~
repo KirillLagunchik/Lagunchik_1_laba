@@ -1,0 +1,153 @@
+unit Unit1;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids;
+
+type
+  TForm1 = class(TForm)
+    Button1: TButton;
+    OpenDialog1: TOpenDialog;
+    Memo1: TMemo;
+    Label1: TLabel;
+    StringGrid1: TStringGrid;
+    Button2: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure Memo1KeyPress(Sender: TObject; var Key: Char);
+    procedure Button2Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  NameFile:Text;
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+   if OpenDialog1.Execute then
+      begin
+         AssignFile(NameFile,OpenDialog1.FileName);
+         reset(NameFile);
+         memo1.lines.LoadFromFile(OpenDialog1.FileName);
+         closeFile(NameFile);
+      end;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+const
+   TrueElements=['A'..'Z','a'..'z','1'..'9','$','_'];
+var
+   CodsElements:array of char;
+   TempChar:char;
+   Variable:string;
+   Ends,Comments,Slash:boolean;
+   count,Numbers,i,j,flag,col,MainNumbers:integer;
+begin
+   count:=0;
+   flag:=0;
+   Col:=0;
+   MainNumbers:=0;
+   Ends:=false;
+   Slash:=true;
+   Comments:=true;
+   AssignFile(NameFile,OpenDialog1.FileName);
+   reset(NameFile);
+   while not eof(NameFIle) do
+   begin
+      Read(NameFile,TempChar);
+      inc(count);
+      Setlength(CodsElements,count);
+      CodsElements[count-1]:=TempChar;
+   end;
+   closefile(NameFile);
+   while Ends=false do
+   begin
+      Numbers:=0;
+      i:=0;
+      inc(col);
+      while ((CodsElements[i]<>'$') and (i<>count)) or (Comments=false)  do
+      begin
+         if (CodsElements[i]='/') and (CodsElements[i+1]='*') then
+            Comments:=not Comments
+         else
+         begin
+            if (CodsElements[i]='/') and (CodsElements[i+1]='/') then
+            begin
+               Comments:=false;
+               Slash:=false;
+            end;
+            if (CodsElements[i]=#$A) and (Slash=false) then
+            begin
+               Comments:=true;
+               Slash:=true;
+            end;
+         end;
+         inc(i);
+      end;
+      if i<>count then
+      begin
+         Variable:='';
+         while CodsElements[i] in TrueElements do
+         begin
+            Variable:=Variable+CodsElements[i];
+            inc(i);
+         end;
+         for i := 0 to count-1 do
+         begin
+            if (CodsElements[i]='/') and (CodsElements[i+1]='*') then
+               Comments:=not Comments
+            else
+            begin
+               if (CodsElements[i]='/') and (CodsElements[i+1]='/') then
+               begin
+                  Comments:=false;
+                  Slash:=false;
+               end;
+               if (CodsElements[i]=#$A) and (Slash=false) then
+               begin
+                  Comments:=true;
+                  Slash:=true;
+               end;
+            end;
+            if (CodsElements[i]='$') and (Comments=true) then
+            begin
+               for j := i to length(Variable)-1+i do
+                  if (CodsElements[j]=Variable[j-i+1]) then
+                     inc(flag);
+               if (flag=length(Variable)) and (not (CodsElements[length(Variable)+i] in TrueElements)) then
+               begin
+                  inc(Numbers);
+                  CodsElements[i]:=' ';
+               end;
+            end;
+            flag:=0;
+         end;
+         MainNumbers:=MainNumbers+Numbers-1;
+         for i := 2 to length(Variable) do
+            StringGrid1.Cells[Col-1,0]:=StringGrid1.Cells[Col-1,0]+Variable[i];
+         StringGrid1.Cells[Col-1,1]:=IntToStr(Numbers-1);
+      end
+      else
+      begin
+         Ends:=true;
+         StringGrid1.Cells[Col-1,0]:='Общий спен';
+         StringGrid1.Cells[Col-1,1]:=IntToStr(MainNumbers);
+         StringGrid1.ColCount:=col;
+      end;
+   end;
+end;
+
+procedure TForm1.Memo1KeyPress(Sender: TObject; var Key: Char);
+begin
+   key:=#0;
+end;
+
+end.
